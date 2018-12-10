@@ -1,7 +1,7 @@
 FROM ubuntu:17.04
 
 # Base packages
-RUN apt-get update -qq -y && apt-get install -y net-tools nmap curl tzdata ruby ppp iptables
+RUN apt-get update -qq -y && apt-get install -y net-tools nmap curl tzdata ruby ppp iptables ca-certificates update-ca-certificates
 
 # Timezone
 RUN echo 'America/Chicago' | tee /etc/timezone
