@@ -1,21 +1,20 @@
-FROM ubuntu:17.04
+FROM ubuntu:latest
 
 # Base packages
-RUN apt-get update -qq -y && apt-get install -y net-tools nmap curl tzdata ruby ppp iptables ca-certificates update-ca-certificates
+RUN apt-get update -qq -y
+RUN apt-get install -y net-tools nmap tzdata iptables rsyslog ca-certificates vim openconnect nginx
+# update-ca-certificates
 
 # Timezone
 RUN echo 'America/Chicago' | tee /etc/timezone
 RUN dpkg-reconfigure --frontend noninteractive tzdata
 
-# Setup ppp device
-RUN mknod /dev/ppp c 108 0
-
 # Setup dir and client
 RUN mkdir /vpntools
-ADD ./tools/vpn.tgz /vpntools
-ADD ./tools/watcher.rb /vpntools
+ADD ./tools/nginx.conf.sample /etc/nginx/nginx.conf
+ADD ./tools/start_vpn.sh /vpntools
+RUN chmod +x /vpntools/start_vpn.sh
 WORKDIR /vpntools
-RUN ./Install.sh
 
 # Init and loop
-CMD ./watcher.rb
+CMD ./start_vpn.sh

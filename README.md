@@ -15,3 +15,12 @@ VPN_PASS
 ```
 
 On launch, the container will init the connection, handle routing the remote IP to f5's `tun0` interface, and setup an iptables NAT rule that forwards the containers local port to the same port definied in `VPN_REMOTE_PORT`.
+
+### Build Steps
+```
+export TAG=latest
+docker build --platform linux/amd64 -t ss-f5-vpn:$TAG .
+docker tag ss-f5-vpn:$TAG [my_aws_acct_id].dkr.ecr.us-east-1.amazonaws.com/ss-f5-vpn:$TAG
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin [my_aws_acct_id].dkr.ecr.us-east-1.amazonaws.com && docker push [my_aws_acct_id].dkr.ecr.us-east-1.amazonaws.com/ss-f5-vpn:$TAG
+```
+

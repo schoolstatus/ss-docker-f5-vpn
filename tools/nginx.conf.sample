@@ -1,0 +1,23 @@
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+ worker_connections 768;
+}
+
+http {
+}
+
+stream {
+  upstream dbtcp {
+    server {{ vpn_remote_ip }}:{{ vpn_remote_port }};
+  }
+
+  server {
+    listen {{ vpn_remote_port }};
+    proxy_pass dbtcp;
+    proxy_connect_timeout 10s;
+  }
+}
